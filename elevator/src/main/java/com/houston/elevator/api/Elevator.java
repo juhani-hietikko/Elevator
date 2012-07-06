@@ -5,4 +5,8 @@ public interface Elevator {
     ElevatorStatus getStatus();
     
     void goToFloor(int floor);
+    
+    void openDoors();
+    
+    void closeDoors();
 }

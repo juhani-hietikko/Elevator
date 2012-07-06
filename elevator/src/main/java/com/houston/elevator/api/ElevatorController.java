@@ -2,7 +2,11 @@ package com.houston.elevator.api;
 
 public interface ElevatorController {
 
-    void handleOrder(ElevatorOrder order);
+    void registerElevator(Elevator elevator);
     
-    void handleInput(ElevatorInput input);
+    void receiveOrder(ElevatorOrder order);
+    
+    void receiveInput(ElevatorInput input);
+    
+    void work();
 }
