@@ -9,20 +9,20 @@ public class ElevatorStatus {
         STATIONARY, MOVING_UP, MOVING_DOWN
     }
     
-    public final int atFloor;
+    public final int currentFloor;
     public final int targetFloor;
     public final DoorStatus doorStatus;
     
-    public ElevatorStatus(int atFloor, int targetFloor, DoorStatus doorStatus) {
-        this.atFloor = atFloor;
+    public ElevatorStatus(int currentFloor, int targetFloor, DoorStatus doorStatus) {
+        this.currentFloor = currentFloor;
         this.targetFloor = targetFloor;
         this.doorStatus = doorStatus;
     }
     
     public KinematicStatus getKinematicStatus() {
-        if (atFloor == targetFloor)
+        if (currentFloor == targetFloor)
             return KinematicStatus.STATIONARY;
-        else if (atFloor < targetFloor)
+        else if (currentFloor < targetFloor)
             return KinematicStatus.MOVING_UP;
         else
             return KinematicStatus.MOVING_DOWN;
