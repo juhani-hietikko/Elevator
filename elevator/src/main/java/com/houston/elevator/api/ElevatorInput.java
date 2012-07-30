@@ -2,7 +2,7 @@ package com.houston.elevator.api;
 
 public class ElevatorInput {
     public enum InputType {
-        GO_TO_FLOOR, CLOSE_DOORS, OPEN_DOORS, ALERT
+        GO_TO_FLOOR, CLOSE_DOORS, OPEN_DOORS
     }
     
     public final Elevator elevator;
