@@ -4,16 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-
-import com.houston.elevator.api.Elevator;
-import com.houston.elevator.api.ElevatorController;
-import com.houston.elevator.controller.ElevatorControllerImpl;
 
 public class SimulatorWindow {
 
@@ -22,11 +20,10 @@ public class SimulatorWindow {
     private static final int UI_COLUMNS = SIMULATED_ELEVATORS + 3;
     
     private static Shell shell;
-    private static List<Elevator> elevators = new ArrayList<Elevator>();
-    private static ElevatorController elevatorController;
+    private static Simulator simulator;
     
     public static void main(String[] args) {
-        setupSimulation();
+        simulator = new Simulator(SIMULATED_ELEVATORS);
         
         Display display = new Display();
         shell = new Shell(display);
@@ -35,7 +32,12 @@ public class SimulatorWindow {
         Button b = new Button(shell, SWT.PUSH);
         b.setText("Advance time");
         b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, UI_COLUMNS, 1));
-
+        b.addMouseListener(new MouseAdapter() { 
+            public void mouseDown(MouseEvent me) { 
+                simulator.advance();
+            } 
+        });
+        
         for (int i = SIMULATED_FLOORS; i >= 1; i--) {
             addFloor(i, i == SIMULATED_FLOORS);
         }
@@ -43,19 +45,24 @@ public class SimulatorWindow {
         addEmptyRow();
         addEmptyRow();
         
-        addLabel("Elevator command panel:");
-        List<String> panelButtons = new ArrayList<String>();
-        for (int i = 0; i < SIMULATED_FLOORS; i++) {
-            panelButtons.add(i + 1 + "");
-        }
-        panelButtons.add("< >");
-        panelButtons.add("> <");
-        for (String button : panelButtons) {
-            addButton(button);
-            if (panelButtons.indexOf(button) % 2 == 1) {
-                for (int i = 0; i < UI_COLUMNS - 2; i++) {
-                    addWhitespace();        
+        for (int i = 0; i < SIMULATED_ELEVATORS; i++) {
+            addLabel("Elevator " + (i + 1) + " command panel:");
+            List<String> panelButtons = new ArrayList<String>();
+            for (int j = 0; j < SIMULATED_FLOORS; j++) {
+                panelButtons.add(j + 1 + "");
+            }
+            panelButtons.add("< >");
+            panelButtons.add("> <");
+            for (String button : panelButtons) {
+                addPanelButton(button, i);
+                if (panelButtons.indexOf(button) % 2 == 1) {
+                    for (int j = 0; j < UI_COLUMNS - 2; j++) {
+                        addWhitespace();        
+                    }
                 }
+            }
+            for (int j = 1 - (panelButtons.size() % 2); j < UI_COLUMNS - 2; j++) {
+                addWhitespace();
             }
         }
         
@@ -65,15 +72,6 @@ public class SimulatorWindow {
                 display.sleep();
         }
         display.dispose();
-    }
-
-    private static void setupSimulation() {
-        elevatorController = new ElevatorControllerImpl();
-        for (int i = 0; i < SIMULATED_ELEVATORS; i++) {
-            SimulatedElevator elevator = new SimulatedElevator();
-            elevators.add(elevator);
-            elevatorController.registerElevator(elevator);
-        }
     }
 
     private static void addEmptyRow() {
@@ -94,8 +92,8 @@ public class SimulatorWindow {
 
     private static void addFloor(int floor, boolean elevatorHere) {
         addLabel("Floor " + floor);
-        addButton("/\\");
-        addButton("\\/");
+        addFloorButton("/\\", floor);
+        addFloorButton("\\/", floor);
 
         for (int i = 0; i < SIMULATED_ELEVATORS; i++) {
             if (elevatorHere) {
@@ -106,9 +104,28 @@ public class SimulatorWindow {
         }
     }
 
-    private static void addButton(String text) {
+    private static void addPanelButton(final String text, final int elevator) {
+        Button b = addButton(text);
+        b.addMouseListener(new MouseAdapter() { 
+            public void mouseDown(MouseEvent me) { 
+                simulator.panelCommandPressed(text);
+            } 
+        });
+    }
+    
+    private static void addFloorButton(final String text, final int floor) {
+        Button b = addButton(text);
+        b.addMouseListener(new MouseAdapter() { 
+            public void mouseDown(MouseEvent me) { 
+                simulator.elevatorOrdered(floor, text);
+            } 
+        });
+    }
+
+    private static Button addButton(String text) {
         Button b = new Button(shell, SWT.PUSH);
         b.setText(text);
         b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
+        return b;
     }
 }
