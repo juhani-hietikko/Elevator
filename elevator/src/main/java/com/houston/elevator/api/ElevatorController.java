@@ -1,12 +1,10 @@
 package com.houston.elevator.api;
 
+import java.util.List;
+
 public interface ElevatorController {
 
     void registerElevator(Elevator elevator);
     
-    void receiveOrder(ElevatorOrder order);
-    
-    void receiveInput(ElevatorInput input);
-    
-    void work();
+    void processInput(List<Order> queuedOrders, List<ControlPanelInput> queuedPanelInput);
 }

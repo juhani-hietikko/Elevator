@@ -1,9 +1,11 @@
 package com.houston.elevator.controller;
 
+import java.util.List;
+
 import com.houston.elevator.api.Elevator;
 import com.houston.elevator.api.ElevatorController;
-import com.houston.elevator.api.ElevatorInput;
-import com.houston.elevator.api.ElevatorOrder;
+import com.houston.elevator.api.ControlPanelInput;
+import com.houston.elevator.api.Order;
 
 public class ElevatorControllerImpl implements ElevatorController {
 
@@ -12,17 +14,7 @@ public class ElevatorControllerImpl implements ElevatorController {
 
     }
 
-    public void receiveOrder(ElevatorOrder order) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void receiveInput(ElevatorInput input) {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void work() {
+    public void processInput(List<Order> queuedOrders, List<ControlPanelInput> queuedPanelInput) {
         // TODO Auto-generated method stub
         
     }

@@ -102,8 +102,17 @@ public class SimulatorWindow {
 
     private static void addFloor(int floor) {
         addLabel("Floor " + floor);
-        addFloorButton("/\\", floor);
-        addFloorButton("\\/", floor);
+        
+        if (floor < SIMULATED_FLOORS) {
+            addFloorButton("/\\", floor);
+        } else {
+            addWhitespace();
+        }
+        if (floor > 1) {
+            addFloorButton("\\/", floor);
+        } else {
+            addWhitespace();
+        }
 
         for (int elevatorIndex = 0; elevatorIndex < SIMULATED_ELEVATORS; elevatorIndex++) {
             Label statusLabel = addLabel();

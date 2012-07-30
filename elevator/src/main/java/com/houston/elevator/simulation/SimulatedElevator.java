@@ -14,12 +14,11 @@ public class SimulatedElevator implements Elevator {
 
     private DoorStatus currentDoorStatus;
     private DoorStatus targetDoorStatus;
-    private int currentFloor; 
-    private int targetFloor;
-    private Map<Integer, Label> statusLabels = new HashMap<Integer, Label>();
+    private int currentFloor = 1; 
+    private int targetFloor = 1;
+    private final Map<Integer, Label> statusLabels = new HashMap<Integer, Label>();
     
-    public SimulatedElevator(int floors) {
-        currentFloor = targetFloor = floors;
+    public SimulatedElevator() {
         currentDoorStatus = DoorStatus.CLOSED;
     }
 

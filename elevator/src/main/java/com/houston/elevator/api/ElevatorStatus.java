@@ -1,6 +1,7 @@
 package com.houston.elevator.api;
 
 public class ElevatorStatus {
+
     public enum DoorStatus {
         CLOSED, OPEN
     }
@@ -9,9 +10,9 @@ public class ElevatorStatus {
         STATIONARY, MOVING_UP, MOVING_DOWN
     }
     
-    public final int currentFloor;
-    public final int targetFloor;
-    public final DoorStatus doorStatus;
+    private final int currentFloor;
+    private final int targetFloor;
+    private final DoorStatus doorStatus;
     
     public ElevatorStatus(int currentFloor, int targetFloor, DoorStatus doorStatus) {
         this.currentFloor = currentFloor;
@@ -26,5 +27,17 @@ public class ElevatorStatus {
             return KinematicStatus.MOVING_UP;
         else
             return KinematicStatus.MOVING_DOWN;
+    }
+    
+    public int getCurrentFloor() {
+        return currentFloor;
+    }
+
+    public int getTargetFloor() {
+        return targetFloor;
+    }
+
+    public DoorStatus getDoorStatus() {
+        return doorStatus;
     }
 }
