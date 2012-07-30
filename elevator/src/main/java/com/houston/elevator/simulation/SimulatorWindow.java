@@ -1,5 +1,9 @@
 package com.houston.elevator.simulation;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -7,97 +11,85 @@ import org.eclipse.swt.widgets.*;
 
 public class SimulatorWindow {
 
-public static void main (String [] args) {
-    Display display = new Display ();
-    Shell shell = new Shell(display);
+    private static final int SIMULATED_ELEVATORS = 2;
+    private static final int SIMULATED_FLOORS = 3;
+    private static final int UI_COLUMNS = SIMULATED_ELEVATORS + 3;
     
-    GridLayout layout = new GridLayout(4, false);
-    shell.setLayout(layout);
+    private static Shell shell;
     
-    Button b = new Button(shell, SWT.PUSH);
-    b.setText("Advance time");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 4, 1));
-    
-    Label label = new Label(shell, SWT.NONE);
-    label.setText("Third floor");
-    label.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("UP");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("DOWN");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    label = new Label(shell, SWT.NONE);
-    label.setText("The elevator is here. Doors closed.");
-    label.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false));
-    
-    label = new Label(shell, SWT.NONE);
-    label.setText("Second floor");
-    label.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("UP");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("DOWN");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    label = new Label(shell, SWT.NONE);
-    label.setText("<empty>");
-    label.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false));
-    
-    label = new Label(shell, SWT.NONE);
-    label.setText("First floor");
-    label.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("UP");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("DOWN");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    label = new Label(shell, SWT.NONE);
-    label.setText("<empty>");
-    label.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false));
-    
-    label = new Label(shell, SWT.NONE);
-    label.setText("Elevator command panel:");
-    label.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("1");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("2");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("3");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    label = new Label(shell, SWT.NONE);
-    label.setText("");
-    label.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("< >");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    b = new Button(shell, SWT.PUSH);
-    b.setText("> <");
-    b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
-    
-    shell.open ();
-    while (!shell.isDisposed ()) {
-        if (!display.readAndDispatch ()) display.sleep ();
+    public static void main(String[] args) {
+        Display display = new Display();
+        shell = new Shell(display);
+        shell.setLayout(new GridLayout(UI_COLUMNS, false));
+
+        Button b = new Button(shell, SWT.PUSH);
+        b.setText("Advance time");
+        b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, UI_COLUMNS, 1));
+
+        for (int i = SIMULATED_FLOORS; i >= 1; i--) {
+            addFloor(i, i == SIMULATED_FLOORS);
+        }
+
+        addEmptyRow();
+        addEmptyRow();
+        
+        addLabel("Elevator command panel:");
+        List<String> panelButtons = new ArrayList<String>();
+        for (int i = 0; i < SIMULATED_FLOORS; i++) {
+            panelButtons.add(i + 1 + "");
+        }
+        panelButtons.add("< >");
+        panelButtons.add("> <");
+        for (String button : panelButtons) {
+            addButton(button);
+            if (panelButtons.indexOf(button) % 2 == 1) {
+                for (int i = 0; i < UI_COLUMNS - 2; i++) {
+                    addWhitespace();        
+                }
+            }
+        }
+        
+        shell.open();
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch())
+                display.sleep();
+        }
+        display.dispose();
     }
-    display.dispose ();
-}
+
+    private static void addEmptyRow() {
+        for (int i = 0; i < UI_COLUMNS; i++) {
+            addWhitespace();            
+        }
+    }
+
+    private static void addWhitespace() {
+        addLabel(" ");
+    }
+
+    private static void addLabel(String text) {
+        Label label = new Label(shell, SWT.NONE);
+        label.setText(text);
+        label.setLayoutData(new GridData(GridData.CENTER, GridData.CENTER, true, false));
+    }
+
+    private static void addFloor(int floor, boolean elevatorHere) {
+        addLabel("Floor " + floor);
+        addButton("/\\");
+        addButton("\\/");
+
+        for (int i = 0; i < SIMULATED_ELEVATORS; i++) {
+            if (elevatorHere) {
+                addLabel("The elevator is here. Doors closed.");
+            } else {
+                addLabel("<empty>");
+            }
+        }
+    }
+
+    private static void addButton(String text) {
+        Button b = new Button(shell, SWT.PUSH);
+        b.setText(text);
+        b.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, 1, 1));
+    }
 }
