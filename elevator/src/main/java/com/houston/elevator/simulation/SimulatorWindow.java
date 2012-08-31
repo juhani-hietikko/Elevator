@@ -30,12 +30,18 @@ public class SimulatorWindow {
         shell = new Shell(display);
         shell.setLayout(new GridLayout(UI_COLUMNS, false));
 
+        final Label notificationLabel = addLabel("");
+        
         Button advanceButton = new Button(shell, SWT.PUSH);
         advanceButton.setText("Advance time");
         advanceButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, true, UI_COLUMNS, 1));
         advanceButton.addMouseListener(new MouseAdapter() { 
             public void mouseDown(MouseEvent me) { 
-                simulator.advance();
+                try {
+                    simulator.advance();
+                } catch (Exception e) {
+                    notificationLabel.setText("Error: " + e.toString());
+                }
                 shell.layout();
             } 
         });
