@@ -21,14 +21,14 @@ public class ElevatorControllerImpl implements ElevatorController {
             List<ControlPanelInput> queuedPanelInput) {
 
         ElevatorStatus status = elevator.getStatus();
-//        if (status != null
-//                && status.getKinematicStatus().equals(
-//                        KinematicStatus.STATIONARY)) {
-//            elevator.openDoors();
-//        }
-//
+        if (status != null
+                && status.getKinematicStatus().equals(
+                        KinematicStatus.STATIONARY)) {
+            elevator.openDoors();
+        }
+
         processPanelInputs(queuedPanelInput);
-//        processOrders(queuedOrders);
+        processOrders(queuedOrders);
     }
 
     public void processOrders(List<Order> queuedOrders) {
@@ -42,16 +42,16 @@ public class ElevatorControllerImpl implements ElevatorController {
         if (queuedPanelInput != null) {
             ControlPanelInput controlPanelInput = queuedPanelInput.get(0);
 
-//            switch (controlPanelInput.getType()) {
-//            case GO_TO_FLOOR:
-//                elevator.goToFloor(controlPanelInput.getSelectedFloor());
-//                break;
-//            case OPEN_DOORS:
-//                elevator.openDoors();
-//                break;
-//            default:
-//                elevator.closeDoors();
-//            }
+            switch (controlPanelInput.getType()) {
+            case GO_TO_FLOOR:
+                elevator.goToFloor(controlPanelInput.getSelectedFloor());
+                break;
+            case OPEN_DOORS:
+                elevator.openDoors();
+                break;
+            default:
+                elevator.closeDoors();
+            }
 
         }
 
